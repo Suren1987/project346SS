@@ -1,0 +1,114 @@
+---
+title: "My Class Project"
+author: "Surendra Shrestha"
+date: "2019-04-22"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Overview}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r, warning = FALSE, echo = FALSE, message = FALSE,}
+library(project346SS)
+```
+
+## Introduction
+
+Wildfire events have increased in both frequency and intensity across the western US in recent decades (Westerling et al., 2006; Abatzoglou & Williams, 2016; Westerling, 2016), threatening life and property, modifying ecosystem functioning and services, and affecting the planet’s climate (Dennison et al., 2014; Littell et al., 2009).  Since the start of 21st century, wildfire burnt about 10.3 million acres in California. In 2013 alone, wildfires burnt about 577,675 acres in California (National Interagency Fire Centre, 2018). Increased wildfire in the western US has been driven by climatic factors such as increasing temperature, dry summers, below average winter precipitation or earlier spring snowmelt, particularly since 2000 (Westerling et al., 2006; Morgan et al., 2008; Littell et al., 2009; Abatzoglou & Williams, 2016; Westerling, 2016). 
+
+Severe wildfires profoundly alter a wide range of ecosystem characteristics such as stand structure, species composition, leaf area, canopy ecophysiology, and micro-climate (Williams et al., 2014). Disturbance-induced ecological change can have large and long-lasting influence on ecosystem carbon fluxes (Amiro et al., 2000; Goulden et al., 2011; Williams et al., 2014), water fluxes (Zhang et al., 2001; Williams et al., 2014), and energy fluxes (Liu et al., 2005; Williams et al., 2014; Jiao et al., 2017). It takes several years to decades to centuries for ecosystem fluxes to return to pre-disturbance levels and is contingent on stand structure and composition and type and intensity of disturbance (Thornton et al., 2002; Dore et al., 2010). Therefore, spatially explicit quantification of ecosystem responses to severe wildfires is needed to assess how these events are altering terrestrial ecosystems, how they are changing surface-atmosphere exchanges, and how the associated changes influence the evolution of the climate system.
+
+This project aims to utilize several MODIS and other products to analyze the variation in carbon and water fluxes in response to severe wildfire event by using a case study of Rim fire in California that occurred in 2013. The specific questions addressed are:
+
+  •	quantify changes in vegetation cover.
+  
+  •	quantify changes surface properties like Land surface temperature (LST),       Evapotranspiration (ET), and Gross Primary Productivity (GPP) due to change in vegetation cover.
+  
+
+## Study Area
+
+The Rim fire (Figure 1) was a massive fire that burned on the west slope of the Sierra Nevada. The fire started on August 17, 2013 and was fully contained October 24, 2013, having burned 257, 314 acres (USFS, 2014). The fire burned a substantial part of Stanislaus National Forest in California, which is a mixed yellow pine forest and Sierran montane forest dominated by ponderosa pine (Pinus ponderosa Lawson & Lawson), white fir (Abies concolor Gordon & Glend), Douglas fir (Pseudotsuga menziesii Franco), sugar pine (P. lambertiana Douglas), incense cedar (Calocedrus decurrens Florin), and black oak (Quercus kelloggii Newberry). Understory species include manzanita (Arctostaphylos spp.), buckbrush (Ceanothus spp.), mountain misery (Chamaebatia foliolosa Bentham), chinquapin (Castanopsis sempervirens Dudley), and various berries (Miksicek et al. 1996). The climate in this region is influenced by the Mediterranean climate of California with dry summer and mild winter.
+
+```{r, warning = FALSE, echo = FALSE, message = FALSE, fig.width=6.0, fig.height=4.0, fig.align = "center"}
+library(geospaar)
+
+setwd("C:/Users/Surendra Shrestha/Desktop/R_Project")
+
+Rim_UTM <- ("C:/Users/Surendra Shrestha/Desktop/R_Project/Rim_Fire01.shp") 
+
+Rim_Fire <- raster("C:/Users/Surendra Shrestha/Desktop/R_Project/Rim_Fire01.tif")
+
+cols <- c("green", "blue", "yellow", "red")
+#plot(Rim_UTM %>% st_geometry())
+plot_noaxes(Rim_Fire, legend = FALSE, main = "Rim Fire Burn Severity", col = cols,
+            mar = c(0, 0, 1, 0))#, add = TRUE)
+legend(x = "bottomleft", legend = c("Unburnt", "Low Severity", "Medium Severity", "High Severity"), 
+       pch = 15, pt.cex = 3, col = cols, bty = "n")
+```
+Figure 1: Map of study area.
+
+
+## Methods
+
+### Cross-Tabulation
+I will examine how the land covers have undergone transitions with fire event by cross tabulating the land cover maps of 2012 (before fire) and 2014 (after fire).
+
+### Create and Compare time series of LST, ET, and GPP
+
+I will preprocess the MODIS products for each year between 2010 and 2016 and create a time-series graph of average LST, ET, and GPP values.
+
+## Preliminary Findings
+
+The map of land covers for years 2012 and 2014 are shown in figure 2. From the visual interpretation of these two maps, we can say that there has been a lot of changes in vegetation cover from 2012 to 2014. These changes in vegetation cover will lead to the changes in surface properties like LST, ET, and GPP.
+
+```{r, warning = FALSE, echo = FALSE, message = FALSE, fig.width=6.0, fig.height=4.0, fig.align = "center"}
+Rim_UTM <- file.path("C:/Users/Surendra Shrestha/Desktop/R_Project/Rim_Fire01.shp") %>% st_read()
+#plot(Rim_UTM %>% st_geometry(), col = "grey")
+
+SNC_2012_UTM <- raster("C:/Users/Surendra Shrestha/Desktop/R_Project/SNC_EVT_2012_Rec.tif")
+
+SNC_2014_UTM <- raster("C:/Users/Surendra Shrestha/Desktop/R_Project/SNC_EVT_2014_Rec.tif")
+
+Rim_2012_UTM <- crop(x = SNC_2012_UTM, y = Rim_UTM)
+Rim_2012_mask <- mask(x = Rim_2012_UTM, mask = Rim_UTM)
+
+Rim_2014_UTM <- crop(x = SNC_2014_UTM, y = Rim_UTM)
+Rim_2014_mask <- mask(x = Rim_2014_UTM, mask = Rim_UTM)
+
+s <- stack(Rim_2012_mask, Rim_2014_mask)
+names(s) <- c("Land covers 2012", "Land covers 2014")
+
+cols <- c("blue", "green", "yellow", "red", "grey", "cyan", "purple")
+plot_noaxes(s, legend = FALSE, col = cols)
+legend(x = "bottomleft", legend = c("Water", "Forest", "Grassland", "Shrubland", "Barren", "Developed", "Sparsely Vegetated"),
+       pch = 15, pt.cex = 3, col = cols, bty = "n")
+```
+Figure 2: Land cover maps of Rim fire for years 2012 and 2014
+
+
+This is also verified by the output of cross tabulation between 2012 and 2014 landcovers.The eight land cover types in the study area are water (0), Forest (1), Grassland (2), Shrubland (3),Barren (4), Developed (5), Agriculture (6), and Sparse Vegetation (7). 
+
+```{r, warning = FALSE, echo = FALSE, message = FALSE, fig.width=6.0, fig.height=4.0, fig.align = "center"}
+names(Rim_2012_mask) <- c("Land covers 2012")
+names(Rim_2014_mask) <- c("Land covers 2014")
+
+Transition <- crosstab(Rim_2012_mask, Rim_2014_mask)
+Transition
+```
+
+## Tasks to be done
+
+ •	create time series of ET and GPP.
+ 
+ •	examine how ET and GPP have recovered after fire.
+ 
+ 
+ 
