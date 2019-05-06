@@ -20,6 +20,8 @@ knitr::opts_chunk$set(
 library(project346SS)
 ```
 
+# Quantifying Changes in Surface Properties in Environment Affected by Wildfire: A Case Study from Rim Fire
+
 ## Introduction
 
 Wildfire events have increased in both frequency and intensity across the western US in recent decades (Westerling et al., 2006; Abatzoglou & Williams, 2016; Westerling, 2016), threatening life and property, modifying ecosystem functioning and services, and affecting the planet’s climate (Dennison et al., 2014; Littell et al., 2009).  Since the start of 21st century, wildfire burnt about 10.3 million acres in California. In 2013 alone, wildfires burnt about 577,675 acres in California (National Interagency Fire Centre, 2018). Increased wildfire in the western US has been driven by climatic factors such as increasing temperature, dry summers, below average winter precipitation or earlier spring snowmelt, particularly since 2000 (Westerling et al., 2006; Morgan et al., 2008; Littell et al., 2009; Abatzoglou & Williams, 2016; Westerling, 2016). 
