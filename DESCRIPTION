@@ -4,7 +4,7 @@ Version: 0.0.1
 Author: Surendra Shrestha
 Maintainer: Surendra Shrestha <SurShrestha@clarku.edu>
 Description: Package for GEOG346 class project
-Depends: R (>= 3.5.2)
+Depends: R (>= 3.0.0)
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
