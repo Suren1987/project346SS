@@ -1,0 +1,272 @@
+---
+title: "My Class Project"
+author: "Surendra Shrestha"
+date: "2019-05-05"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Overview}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r, warning = FALSE, echo = FALSE, message = FALSE,}
+library(project346SS)
+```
+# Quantifying Changes in Surface Properties in Environment Affected by Wildfire: A Case Study from Rim Fire
+
+
+## Introduction
+
+Wildfire events have increased in both frequency and intensity across the western US in recent decades (Westerling et al., 2006; Abatzoglou & Williams, 2016; Westerling, 2016), threatening life and property, modifying ecosystem functioning and services, and affecting the planet’s climate (Dennison et al., 2014; Littell et al., 2009).  Since the start of 21st century, wildfire burnt about 10.3 million acres in California. In 2013 alone, wildfires burnt about 577,675 acres in California (National Interagency Fire Centre, 2018). Increased wildfire in the western US has been driven by climatic factors such as increasing temperature, dry summers, below average winter precipitation or earlier spring snowmelt, particularly since 2000 (Westerling et al., 2006; Morgan et al., 2008; Littell et al., 2009; Abatzoglou & Williams, 2016; Westerling, 2016). 
+
+Severe wildfires profoundly alter a wide range of ecosystem characteristics such as stand structure, species composition, leaf area, canopy ecophysiology, and micro-climate (Williams et al., 2014). Disturbance-induced ecological change can have large and long-lasting influence on ecosystem carbon fluxes (Amiro et al., 2000; Goulden et al., 2011; Williams et al., 2014), water fluxes (Zhang et al., 2001; Williams et al., 2014), and energy fluxes (Liu et al., 2005; Williams et al., 2014; Jiao et al., 2017). It takes several years to decades to centuries for ecosystem fluxes to return to pre-disturbance levels and is contingent on stand structure and composition and type and intensity of disturbance (Thornton et al., 2002; Dore et al., 2010). Therefore, spatially explicit quantification of ecosystem responses to severe wildfires is needed to assess how these events are altering terrestrial ecosystems, how they are changing surface-atmosphere exchanges, and how the associated changes influence the evolution of the climate system.
+
+This project aims to utilize several MODIS and other products to analyze the variation in carbon and water fluxes in response to severe wildfire event by using a case study of Rim fire in California that occurred in 2013. The specific objectives of this project include:
+
+  •	quantify changes in vegetation cover.
+  
+  •	quantify changes surface properties like Land surface temperature (LST) and Gross Primary Productivity (GPP) due to change in vegetation cover.
+  
+
+## Study Area
+
+The Rim fire (Figure 1) was a massive fire that burned on the west slope of the Sierra Nevada. The fire started on August 17, 2013 and was fully contained October 24, 2013, having burned 257, 314 acres (USFS, 2014). The fire burned a substantial part of Stanislaus National Forest in California, which is a mixed yellow pine forest and Sierran montane forest dominated by ponderosa pine (Pinus ponderosa Lawson & Lawson), white fir (Abies concolor Gordon & Glend), Douglas fir (Pseudotsuga menziesii Franco), sugar pine (P. lambertiana Douglas), incense cedar (Calocedrus decurrens Florin), and black oak (Quercus kelloggii Newberry). Understory species include manzanita (Arctostaphylos spp.), buckbrush (Ceanothus spp.), mountain misery (Chamaebatia foliolosa Bentham), chinquapin (Castanopsis sempervirens Dudley), and various berries (Miksicek et al. 1996). The climate in this region is influenced by the Mediterranean climate of California with dry summer and mild winter.
+
+```{r, warning = FALSE, echo = FALSE, message = FALSE, fig.width=6.0, fig.height=4.0, fig.align = "center"}
+library(geospaar)
+
+setwd("C:/Users/Surendra Shrestha/Desktop/R_Project/Data")
+
+Rim_UTM <- ("C:/Users/Surendra Shrestha/Desktop/R_Project/Data/Rim_Fire01.shp") 
+
+Rim_Fire <- raster("C:/Users/Surendra Shrestha/Desktop/R_Project/Data/Rim_Fire01.tif")
+
+cols <- c("green", "blue", "yellow", "red")
+
+plot_noaxes(Rim_Fire, legend = FALSE, main = "Rim Fire Burn Severity", col = cols,
+            mar = c(0, 0, 1, 0))#, add = TRUE)
+legend(x = "bottomleft", legend = c("Unburnt", "Low Severity", "Medium Severity", "High Severity"), 
+       pch = 15, pt.cex = 3, col = cols, bty = "n")
+```
+Figure 1: Map of study area.
+
+
+## Methods
+
+### Data Acquisition and  Preprocessing
+
+The land cover dataset was obtained from landfire website. The eight reclassified land cover types in the study area are water (0), Forest (1), Grassland (2), Shrubland (3),Barren (4), Developed (5), Agriculture (6), and Sparse Vegetation (7). MODIS products pertaining to LST (MOD11A2) (Wan et al., 2015) and GPP (MOD17A2H) (Running et al., 2015) were downloaded from MODIS archive from June to August for each year from 2010 to 2016.  Both land covers and MODIS products were processed in R. All these datasets were converted to the same projection and windowed to the spatial extent of Rim fire to facilitate consistent analyses. MODIS products were multilpied with certain scaling factors (0.02 for LST and 0.0001 for GPP) to get the real values.
+
+
+### Analysis
+
+I crosstabulated the land cover maps of 2012 (before fire) and 2014 (after fire) to examine how the land covers have undergone transitions with fire event. The output of crosstabulation shows how may pixels were retained and how many of them transitioned from one land cover class to other land cover classes.
+
+My methodology for the LST and GPP Time series involved averaging all the 13 images for each year from 2010 to 2016. I masked out the water bodies and developed areas as GPP product has no values for these land cover types. I then graph the average pixel value of LST and GPP for each year. 
+
+
+## Results
+
+### Changes in Vegetation Cover
+
+The map of land covers for years 2012 and 2014 are shown in figure 2. From the visual interpretation of these two maps, we can say that there has been a lot of changes in vegetation cover from 2012 to 2014. These changes in vegetation cover will lead to the changes in surface properties like LST, ET, and GPP.
+
+```{r, warning = FALSE, echo = FALSE, message = FALSE, fig.width=6.0, fig.height=4.0, fig.align = "center"}
+Rim_UTM <- file.path("C:/Users/Surendra Shrestha/Desktop/R_Project/Data/Rim_Fire01.shp") %>% st_read()
+#plot(Rim_UTM %>% st_geometry(), col = "grey")
+
+SNC_2012_UTM <- raster("C:/Users/Surendra Shrestha/Desktop/R_Project/Data/SNC_EVT_2012_Rec.tif")
+
+SNC_2014_UTM <- raster("C:/Users/Surendra Shrestha/Desktop/R_Project/Data/SNC_EVT_2014_Rec.tif")
+
+Rim_2012_UTM <- crop(x = SNC_2012_UTM, y = Rim_UTM)
+Rim_2012_mask <- mask(x = Rim_2012_UTM, mask = Rim_UTM)
+
+Rim_2014_UTM <- crop(x = SNC_2014_UTM, y = Rim_UTM)
+Rim_2014_mask <- mask(x = Rim_2014_UTM, mask = Rim_UTM)
+
+s <- stack(Rim_2012_mask, Rim_2014_mask)
+names(s) <- c("Land covers 2012", "Land covers 2014")
+
+cols <- c("blue", "green", "yellow", "red", "grey", "cyan", "purple")
+plot_noaxes(s, legend = FALSE, col = cols)
+legend(x = "bottomleft", legend = c("Water", "Forest", "Grassland", "Shrubland", "Barren", "Developed", "Sparsely Vegetated"),
+       pch = 15, pt.cex = 3, col = cols, bty = "n")
+```
+Figure 2: Land cover maps of Rim fire for years 2012 and 2014
+
+
+The output of cross tabulation between 2012 and 2014 landcovers showed that more than 5% of forest area was converted to shrubland and other land cover classes. 
+
+Table 1: Number of pixels transitioned between 2012 and 2014
+```{r, warning = FALSE, echo = FALSE, message = FALSE, fig.width=6.0, fig.height=4.0, fig.align = "center"}
+names(Rim_2012_mask) <- c("Land covers 2012")
+names(Rim_2014_mask) <- c("Land covers 2014")
+
+Transition <- crosstab(Rim_2012_mask, Rim_2014_mask)
+Transition
+```
+
+### Changes in LST and GPP
+
+This project investigates the changes in land surface temperature and gross primary productivity following the wildfire event. Figures 3 and 5 show the spatial distribution of LST and GPP for years between 2010 and 2016, respectively. LST has mainly increased in high severity areas (compare Figures 1 and 3). Similarly, GPP has decreased in areas of high severity fire (compare Figures 1 and 5).
+
+Figures 4 and 6 show the time series of LST and GPP in the fire perimeter between 2010 and 2016. There are several points to notice in these figures. Year 2011 was a wet year which is characterized by decreased surface temperature. This pattern was consistently matched by a corresponding increaase in GPP. Drought in California began in 2012 and lasted until 2016 which is evident by increased temperature and corresponding decreased GPP. There was sudden increase in LST and drop in GPP in fire area in 2014. This increase in LST and decrease in GPP can be attributted to the drought. This year was a peak year of drought when 100% area of California was under severe drought and almost 60% of California was under exceptional drought (D4 category). In 2015 and 2016, GPP started to recover in the study area due to vegetative growth and LST decreased due to transfer of heat to the atmosphere by plants.
+
+
+```{r, warning = FALSE, echo = FALSE, message = FALSE, fig.width=8.0, fig.height=6.0, fig.align = "center"}
+
+### LST
+
+fs <- dir("C:/Users/Surendra Shrestha/Desktop/R_Project/Data", pattern = "MODIS_LST*.*.rst", full.names = TRUE)
+l <- lapply(fs, raster)
+s_MODIS_LST <- stack(l)
+
+# converting to degree celcius
+s_LST <- (s_MODIS_LST * 0.02) - 273
+
+# Averaging the image values for each year
+LST_2010 <- sum(s_LST[[1:13]]) / 13
+LST_2011 <- sum(s_LST[[14:26]]) / 13
+LST_2012 <- sum(s_LST[[27:39]]) / 13
+LST_2013 <- sum(s_LST[[40:52]]) / 13
+LST_2014 <- sum(s_LST[[53:65]]) / 13
+LST_2015 <- sum(s_LST[[66:78]]) / 13
+LST_2016 <- sum(s_LST[[79:91]]) / 13
+
+
+MODIS_LST_TS <- stack(LST_2010, LST_2011, LST_2012, LST_2013, LST_2014, LST_2015, LST_2016)
+
+Rim_LST_crop <- crop(x = MODIS_LST_TS, y = Rim_UTM)
+names(Rim_LST_crop) <- c("Rim_LST_2010", "Rim_LST_2011", "Rim_LST_2012",
+                         "Rim_LST_2013", "Rim_LST_2014", "Rim_LST_2015",
+                         "Rim_LST_2016")
+
+Rim_LST <- mask(x = Rim_LST_crop, mask = Rim_UTM)
+par(mfrow = c(4, 2))
+plot_noaxes(Rim_LST, legend.args = list(text = expression(paste("(", degree, "C)"))))
+```
+Figure 3: Spatial distribution of LST between 2010-2016.
+
+
+```{r, warning = FALSE, echo = FALSE, message = FALSE, fig.width=8.0, fig.height=6.0, fig.align = "center"}
+
+
+# Plot Time Series of average LST
+LST_stat <- list(cellStats(x = Rim_LST, stat = "mean"))
+
+names(LST_stat) <- "mean"
+
+LST_statsf <- do.call(cbind, LST_stat) %>% data.frame %>%
+  mutate(date = c(2010:2016))
+ggplot(LST_statsf %>% select(date, mean)) + geom_line(aes_string("date", "mean")) +
+  xlab("")
+```
+Figure 4: Time series graph of mean values of GPP for each year from 2010 to 2016.
+
+
+```{r, warning = FALSE, echo = FALSE, message = FALSE, fig.width=8.0, fig.height=6.0, fig.align = "left"}
+
+### GPP
+
+fs1 <- dir("C:/Users/Surendra Shrestha/Desktop/R_Project/Data", pattern = "MODIS_GPP*.*.rst", full.names = TRUE)
+l1 <- lapply(fs1, raster)
+s_MODIS_GPP <- stack(l1)
+s_GPP <- s_MODIS_GPP / 80000
+
+GPP_2010 <- sum(s_GPP[[1:13]]) / 13
+GPP_2011 <- sum(s_GPP[[14:26]]) / 13
+GPP_2012 <- sum(s_GPP[[27:39]]) / 13
+GPP_2013 <- sum(s_GPP[[40:52]]) / 13
+GPP_2014 <- sum(s_GPP[[53:65]]) / 13
+GPP_2015 <- sum(s_GPP[[66:78]]) / 13
+GPP_2016 <- sum(s_GPP[[79:91]]) / 13
+
+MODIS_GPP_TS <- stack(GPP_2010, GPP_2011, GPP_2012, GPP_2013, GPP_2014, GPP_2015, GPP_2016)
+
+Rim_GPP_crop <- crop(x = MODIS_GPP_TS, y = Rim_UTM)
+
+### Mask out water and developed areas
+GPP_mask <- raster("C:/Users/Surendra Shrestha/Desktop/R_Project/Data/GPP_Mask.rst")
+GPP_mask_crop <- crop(x = GPP_mask, y = Rim_UTM)
+Rim_GPP_mask <- Rim_GPP_crop * GPP_mask_crop
+names(Rim_GPP_mask) <- c("Rim_GPP_2010", "Rim_GPP_2011", "Rim_GPP_2012",
+                         "Rim_GPP_2013", "Rim_GPP_2014", "Rim_GPP_2015",
+                         "Rim_GPP_2016")
+Rim_GPP <- mask(x = Rim_GPP_mask, mask = Rim_UTM)
+
+par(mfrow = c(4, 2))
+plot_noaxes(Rim_GPP, legend.args = list(text = expression(paste("(", Kg, C, "/", m2,")"))))
+```
+Figure 5: Spatial distribution of GPP between 2010-2016.
+
+
+```{r, warning = FALSE, echo = FALSE, message = FALSE, fig.width=8.0, fig.height=6.0, fig.align = "center"}
+
+# Plot Time Series of average LST
+GPP_stat <- list(cellStats(x = Rim_GPP, stat = "mean"))
+
+names(GPP_stat) <- "mean"
+
+GPP_statsf <- do.call(cbind, GPP_stat) %>% data.frame %>%
+  mutate(date = c(2010:2016))
+ggplot(GPP_statsf %>% select(date, mean)) + geom_line(aes_string("date", "mean")) +
+  xlab("")
+```
+Figure 6: Time series graph of mean values of GPP for each year from 2010 to 2016.
+
+## Conclusions
+
+Wildfire strongly influence the surface-atmosphere fluxes through its impact on vegetation cover. This project was carried out to understand the variability of ecosystem properties like LST and GPP in environment affected by fire. This study found decrease in LST during years following wildfire event. In contrast, the GPP decreased with pattern consistent with LST.
+
+The main limitation of this study is that I have only considered changes in vegetation cover ignoring the impacts of changes in plant physiology and changes in microclimate. In future research, detailed, intensive monitoring of vegetation cover, leaf area, leaf-scale physiological function, and microclimate should be considered to adequately address this issue. Future study should also focus on comparing the surface properties among contrasting land cover types.
+
+
+## References:
+
+Abatzoglou, J. T., & Williams, A. P. (2016). Impact of anthropogenic climate change on wildfire across western US forests. Proceedings of the National Academy of Sciences, 113(42), 11770–11775. http://doi.org/10.1073/pnas.1607171113 
+
+Amiro, B. D., Chen, J. M., & Liu, J. (2000). Net primary productivity following forest fire for Canadian ecoregions. Canadian Journal of Forest Research, 30(6), 939–947. http://doi.org/10.1139/cjfr-30-6-939 
+
+Dennison, P. E., Brewer, S. C., Arnold, J. D., & Moritz, M. A. (2014). Large wildfire trends in the western United States, 1984–2011. Geophysical Research Letters, 41, 2928–2933. https://doi.org/10.1002/2014GL059576
+
+Dore, A. S., Kolb, T. E., Eckert, S. E., Sullivan, B. W., Hungate, B. A., Kaye, J. P., … Kaye, J. P. (2010). Carbon and water fluxes from ponderosa pine forests disturbed by wildfire and thinning. Ecological Applications, 20(3), 663–683.
+
+Goulden, M. L., Mcmillan, A. M. S., Winston, G. C., Rocha, A. V., Manies, K. L., Harden, J. W., & Bond-Lamberty, B. P. (2011). Patterns of NPP, GPP, respiration, and NEP during boreal forest succession. Global Change Biology, 17(2), 855–871. http://doi.org/10.1111/j.1365-2486.2010.02274.x 
+
+Jiao, T., Williams, C. A., Ghimire, B., Masek, J., Gao, F., & Schaaf, C. (2017). Global climate forcing from albedo change caused by large-scale deforestation and reforestation: Quantification and attribution of geographic variation. Climatic Change, 142(3–4), 463–476. http://doi.org/10.1007/s10584-017-1962-8
+
+Littell, J. S., Mckenzie, D., Peterson, D. L., & Westerling, A. L. (2009). Climate and wildfire area burned in western U.S. ecoprovinces , 191 6-2003. Ecological Applications, 19(4), 1003–1021.
+
+Liu, H., Randerson, J. T., Lindfors, J., & Chapin, F. S. (2005). Changes in the surface energy budget after fire in boreal ecosystems of interior Alaska: An annual perspective. Journal of Geophysical Research Atmospheres, 110(13), 1–12. http://doi.org/10.1029/2004JD005158 
+
+Miksicek, C., K. Roper, D. Simons, J. Farquhar, K. Loeffler, J. Hall, T.L. Jackson, and R.J. Jackson. 1996. Overview of the prehistory of the Stanislaus National Forest. < http://www.fs.usda.gov/Internet/FSE_DOCUMENTS/fsm91_057359.pdf>.
+
+Morgan, P., Heyerdahl, E. K., & Gibson, C. E. 2008. Multi-season climate synchronized forest fires throughout the 20th century, northern Rockies, USA. Ecology, 89(3), 717–728. http://doi.org/10.1890/06-2049.1
+
+Running, S., Mu, Q., & Zhao, M. 2015. In. MOD17A2H MODIS/Terra Gross Primary Productivity 8-Day L4 Global 500m SIN Grid V006. NASA EOSDIS Land Processes DAAC. doi: 10.5067/MODIS/MOD17A2H.006
+
+Thornton, P. E., . E. Law, H. L. Gholz, K. L. Clark, E. Falge, D. S. Ellsworth, A. H. Goldstein, R. K. Monson, D. Hollinger, M. Falk, J. Chen, & J. P. Sparks. (2002). Modeling and measuring the effects of disturbance history and climate on carbon and water budgets in evergreen needleleaf forests. Agricultural and Forest Meteorology, 113, 185-222.
+
+Wan, Z., Hook, S., & Hulley, G. 2015. MOD11A2 MODIS/Terra Land Surface Temperature/Emissivity 8-Day L3 Global 1km SIN Grid V006. In. NASA EOSDIS LP DAAC. doi: 10.5067/MODIS/MOD11A2.006
+
+Westerling, A. L. (2016). Increasing western US forest wildfire activity: sensitivity to changes in the timing of spring. Philos. Trans. Royal Soc. B, 371, Pii: 20160373.
+
+Westerling, A. L., Hidalgo, H. G., Cayan, D. R., & Swetnam, T. W. (2006). Warming and earlier spring increase Western U.S. forest wildfire activity. Science, 313(5789), 940–943. 
+
+Williams, C. A., Vanderhoof, M. K., Khomik, M., & Ghimire, B. (2014). Post-clearcut dynamics of carbon, water and energy exchanges in a midlatitude temperate, deciduous broadleaf forest environment. Global Change Biology, 20(3), 992–1007. https://doi.org/10.1111/gcb.12388 
+
+Zhang, L., Dawes, W. R., & Walker, G. R. (2001). Response of mean annual evapotranspiration to vegetation changes at catchmet scale. Water Resources Research, 37(3), 701–708. http://doi.org/10.1029/2000WR900325
+
+
+
+
+
+
