@@ -9,7 +9,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r setup, include = FALSE}
+```{r setup, include = FALSE, eval=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -39,7 +39,7 @@ This project aims to utilize several MODIS and other products to analyze the var
 
 The Rim fire (Figure 1) was a massive fire that burned on the west slope of the Sierra Nevada. The fire started on August 17, 2013 and was fully contained October 24, 2013, having burned 257, 314 acres (USFS, 2014). The fire burned a substantial part of Stanislaus National Forest in California, which is a mixed yellow pine forest and Sierran montane forest dominated by ponderosa pine (Pinus ponderosa Lawson & Lawson), white fir (Abies concolor Gordon & Glend), Douglas fir (Pseudotsuga menziesii Franco), sugar pine (P. lambertiana Douglas), incense cedar (Calocedrus decurrens Florin), and black oak (Quercus kelloggii Newberry). Understory species include manzanita (Arctostaphylos spp.), buckbrush (Ceanothus spp.), mountain misery (Chamaebatia foliolosa Bentham), chinquapin (Castanopsis sempervirens Dudley), and various berries (Miksicek et al. 1996). The climate in this region is influenced by the Mediterranean climate of California with dry summer and mild winter.
 
-```{r, warning = FALSE, echo = FALSE, message = FALSE, fig.width=6.0, fig.height=4.0, fig.align = "center"}
+```{r, warning = FALSE, echo = FALSE, eval=FALSE, message = FALSE, fig.width=6.0, fig.height=4.0, fig.align = "center"}
 library(geospaar)
 
 setwd("C:/Users/Surendra Shrestha/Desktop/R_Project")
@@ -55,6 +55,8 @@ plot_noaxes(Rim_Fire, legend = FALSE, main = "Rim Fire Burn Severity", col = col
 legend(x = "bottomleft", legend = c("Unburnt", "Low Severity", "Medium Severity", "High Severity"), 
        pch = 15, pt.cex = 3, col = cols, bty = "n")
 ```
+![](C:\Users\Surendra Shrestha\Documents\GEOG346_Project\project346SS\Final_Output\Study_Area.png) 
+
 Figure 1: Map of study area.
 
 
@@ -71,7 +73,7 @@ I will preprocess the MODIS products for each year between 2010 and 2016 and cre
 
 The map of land covers for years 2012 and 2014 are shown in figure 2. From the visual interpretation of these two maps, we can say that there has been a lot of changes in vegetation cover from 2012 to 2014. These changes in vegetation cover will lead to the changes in surface properties like LST, ET, and GPP.
 
-```{r, warning = FALSE, echo = FALSE, message = FALSE, fig.width=6.0, fig.height=4.0, fig.align = "center"}
+```{r, warning = FALSE, echo = FALSE, eval=FALSE, message = FALSE, fig.width=6.0, fig.height=4.0, fig.align = "center"}
 Rim_UTM <- file.path("C:/Users/Surendra Shrestha/Desktop/R_Project/Rim_Fire01.shp") %>% st_read()
 #plot(Rim_UTM %>% st_geometry(), col = "grey")
 
@@ -93,12 +95,17 @@ plot_noaxes(s, legend = FALSE, col = cols)
 legend(x = "bottomleft", legend = c("Water", "Forest", "Grassland", "Shrubland", "Barren", "Developed", "Sparsely Vegetated"),
        pch = 15, pt.cex = 3, col = cols, bty = "n")
 ```
+![](C:\Users\Surendra Shrestha\Documents\GEOG346_Project\project346SS\Final_Output\Landcovers.png)
+
 Figure 2: Land cover maps of Rim fire for years 2012 and 2014
 
 
 This is also verified by the output of cross tabulation between 2012 and 2014 landcovers.The eight land cover types in the study area are water (0), Forest (1), Grassland (2), Shrubland (3),Barren (4), Developed (5), Agriculture (6), and Sparse Vegetation (7). 
 
-```{r, warning = FALSE, echo = FALSE, message = FALSE, fig.width=6.0, fig.height=4.0, fig.align = "center"}
+Table 1: Number of pixels transitioned between 2012 and 2014
+![](C:\Users\Surendra Shrestha\Documents\GEOG346_Project\project346SS\Final_Output\Transition.png)
+
+```{r, warning = FALSE, echo = FALSE, eval=FALSE, message = FALSE, fig.width=6.0, fig.height=4.0, fig.align = "center"}
 names(Rim_2012_mask) <- c("Land covers 2012")
 names(Rim_2014_mask) <- c("Land covers 2014")
 
