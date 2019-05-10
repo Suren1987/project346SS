@@ -16,10 +16,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r, warning = FALSE, echo = FALSE, message = FALSE,}
-library(project346SS)
-```
-
 # Quantifying Changes in Surface Properties in Environment Affected by Wildfire: A Case Study from Rim Fire
 
 ## Introduction
@@ -55,7 +51,7 @@ plot_noaxes(Rim_Fire, legend = FALSE, main = "Rim Fire Burn Severity", col = col
 legend(x = "bottomleft", legend = c("Unburnt", "Low Severity", "Medium Severity", "High Severity"), 
        pch = 15, pt.cex = 3, col = cols, bty = "n")
 ```
-![](C:\Users\Surendra Shrestha\Documents\GEOG346_Project\project346SS\Final_Output\Study_Area.png) 
+![](../Final_Output/Study_Area.png) 
 
 Figure 1: Map of study area.
 
@@ -95,7 +91,7 @@ plot_noaxes(s, legend = FALSE, col = cols)
 legend(x = "bottomleft", legend = c("Water", "Forest", "Grassland", "Shrubland", "Barren", "Developed", "Sparsely Vegetated"),
        pch = 15, pt.cex = 3, col = cols, bty = "n")
 ```
-![](C:\Users\Surendra Shrestha\Documents\GEOG346_Project\project346SS\Final_Output\Landcovers.png)
+![](../Final_Output/Landcovers.png)
 
 Figure 2: Land cover maps of Rim fire for years 2012 and 2014
 
@@ -103,7 +99,7 @@ Figure 2: Land cover maps of Rim fire for years 2012 and 2014
 This is also verified by the output of cross tabulation between 2012 and 2014 landcovers.The eight land cover types in the study area are water (0), Forest (1), Grassland (2), Shrubland (3),Barren (4), Developed (5), Agriculture (6), and Sparse Vegetation (7). 
 
 Table 1: Number of pixels transitioned between 2012 and 2014
-![](C:\Users\Surendra Shrestha\Documents\GEOG346_Project\project346SS\Final_Output\Transition.png)
+![](../Final_Output/Transition.png)
 
 ```{r, warning = FALSE, echo = FALSE, eval=FALSE, message = FALSE, fig.width=6.0, fig.height=4.0, fig.align = "center"}
 names(Rim_2012_mask) <- c("Land covers 2012")
